@@ -1,0 +1,5 @@
+/.idea/
+/.vscode/
+/.venv/
+
+/rit_credentials.py
