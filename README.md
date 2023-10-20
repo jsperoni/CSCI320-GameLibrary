@@ -6,3 +6,5 @@ password = ""
 ```
 
 These values should be your CS account username and password, not the general RIT credentials
+
+When making your python virtual environment make sure to name `.venv` or something else (will need to update the `.gitignore` if you do) so we dont track thousands of files
