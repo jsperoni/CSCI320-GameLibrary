@@ -16,7 +16,7 @@ pg_user = username
 pg_password = password
 
 
-def execute_query(query):
+def execute_query(query, params=None, fetch_results=True):
     try:
         with SSHTunnelForwarder(
                 (ssh_host, ssh_port),
@@ -32,9 +32,14 @@ def execute_query(query):
                     port=tunnel.local_bind_port
             ) as conn:
                 with conn.cursor() as cursor:
-                    cursor.execute(query)
-                    result = cursor.fetchall()
-                    return result
+                    cursor.execute(query, params)
+
+                    # Commit changes for non-select statements
+                    conn.commit()
+
+                    if fetch_results:
+                        result = cursor.fetchall()
+                        return result
 
     except Exception as e:
         print(f"An error occurred: {e}")
