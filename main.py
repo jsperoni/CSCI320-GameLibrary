@@ -1,28 +1,38 @@
 import random
 
+from create_player import create_player
+from search_player import does_username_exist, does_password_match
+
 
 def login():
     while True:
         username = input("Enter username: ")
-        temp_un_list = ["123"]
-        temp_pw_list = ["123"]
-        if username in temp_un_list:
+        player_id = does_username_exist(username)
+
+        if player_id:
             password = input("Enter password: ")
-            if password in temp_pw_list:
+            if does_password_match(username, password):
                 print("Logged in!")
-                user_id = 10  # query the id from sql
-                return True, user_id
+                return True, player_id
+            else:
+                print("Invalid password")
         else:
             temp = input("Account does not exist. Create new account? \n"
                          "(Y)es/(N)o\n")
             if temp.upper() == "N":
                 continue
             elif temp.upper() == "Y":
-                temp_un_list.append(username)
                 password = input("Enter password: ")
-                temp_pw_list.append(password)
-                user_id = 10  # query the id from sql
-                return True, user_id
+
+                player_id = create_player(
+                    username=username,
+                    password=password,
+                    email=f"{username}@gmail.com",
+                    first_name=f"{username} first name",
+                    last_name=f"{username} last name"
+                )
+
+                return True, player_id
             else:
                 print("Unknown input... Start again")
                 continue
