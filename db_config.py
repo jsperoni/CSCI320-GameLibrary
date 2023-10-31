@@ -22,13 +22,13 @@ def execute_query(query, params=None, fetch_results=True):
                 (ssh_host, ssh_port),
                 ssh_username=ssh_user,
                 ssh_password=ssh_password,
-                remote_bind_address=('127.0.0.1', 5432)
+                remote_bind_address=(pg_host, pg_port)
         ) as tunnel:
             with connect(
                     dbname=pg_database,
                     user=pg_user,
                     password=pg_password,
-                    host='localhost',
+                    host=tunnel.local_bind_host,
                     port=tunnel.local_bind_port
             ) as conn:
                 with conn.cursor() as cursor:
