@@ -1,9 +1,16 @@
 import random
 
+from add_game_to_collection import add_game_to_collection
+from create_access_date import create_access_date
 from create_collection import create_collection
 from create_player import create_player
+from delete_collection import delete_collection
+from delete_game_from_collection import delete_game_from_collection
 from search_collections import search_collection
+from search_game_collections import search_game_collections
+from search_games import search_game_by_id
 from search_player import does_username_exist, does_password_match
+from update_collection_name import update_collection_name
 
 
 def login():
@@ -15,6 +22,8 @@ def login():
             password = input("Enter password: ")
             if does_password_match(username, password):
                 print("Logged in!")
+                create_access_date(player_id)
+
                 return True, player_id
             else:
                 print("Invalid password")
@@ -33,6 +42,7 @@ def login():
                     first_name=f"{username} first name",
                     last_name=f"{username} last name"
                 )
+                create_access_date(player_id)
 
                 return True, player_id
             else:
@@ -40,63 +50,60 @@ def login():
                 continue
 
 
-def collection_processing(user_id):
-    # page_length = 10
-    # current_page = 1
-    collections_list = search_collection(user_id)
+def collection_processing(player_id):
+    collections_list = search_collection(player_id)
 
     print("Collections:")
 
     if not collections_list:
         print("No collections")
-
-    for index, col in enumerate(collections_list):
-        print(f"{0}: name={col[0]}, games={col[1]}, total_play_time (H:M)={round(col[2])}")
-
+    else:
+        for collection in collections_list:
+            print(f"id={collection[0]} name={collection[1]}, games={collection[2]}, total_play_time (H:M)={round(collection[3])}")
 
     while True:
         # sql query to get list of all collections should be inside while loop
-        # collection_option = input("(C)reate | (V)iew | (N)ext page | (P)revious page | (B)ack \n")
         collection_option = input("(C)reate | (V)iew | (B)ack \n")
         if collection_option.upper() == "C":
             collection_name = input("Enter collection name to create (leave empty to go back): ")
             if collection_name == "":
                 return
             else:
-                create_collection(player_id=user_id, collection_name=collection_name)
+                create_collection(player_id=player_id, collection_name=collection_name)
                 print("Collection created")
         elif collection_option.upper() == "V":
-            collection_name = input("Enter collection name to look into (leave empty to go back): ")
-            if collection_name == "":
+            collection_id = input("Enter collection id to look into (leave empty to go back): ")
+
+            if collection_id == "":
                 return
-            elif collection_name.upper() in collections_list:
-                view_collection(collection_name)
+
+            matching_row = list(filter(lambda col: col[0] == int(collection_id), collections_list))
+
+            if matching_row:
+                view_collection(collection_name=matching_row[0][1], collection_id=collection_id)
             else:
                 print("Collection not found")
                 continue
         elif collection_option.upper() == "B":
             break
-        # elif collection_option.upper() == "N":
-        #     # if current_page != ((len(list_of_all_games)/10)+1)
-        #     current_page += 1
-        # elif collection_option.upper() == "P":
-        #     if current_page != 0:
-        #         current_page -= 1
         else:
             print("Unknown command... Try again")
     return
 
 
-def view_collection(collection_name):
+def view_collection(collection_name, collection_id):
+    print(f"Viewing {collection_name}")
+
     while True:
-        view_option = input("(D)elete | (E)dit | (V)iew collection | (B)ack \n")
+        view_option = input("(D)elete | (E)dit | (V)iew collection games | (B)ack \n")
         if view_option.upper() == "D":
-            delete_collection(collection_name)
+            delete_collection(collection_id)
+            print("Collection deleted")
         elif view_option.upper() == "E":
-            rename_collection(collection_name)
+            rename_collection(collection_id=collection_id, collection_name=collection_name)
             break
         elif view_option.upper() == "V":
-            view_collection_games(collection_name)
+            view_collection_games(collection_id=collection_id, collection_name=collection_name)
         elif view_option.upper() == "B":
             break
         else:
@@ -104,77 +111,79 @@ def view_collection(collection_name):
     return
 
 
-def view_collection_games(collection_name):
-    # sql statement to get all the games in the collection
-    # add pages later
-    temp_game_list = ["1", "2", "Hello"]
+def view_collection_games(collection_id, collection_name):
+    games_in_collection = search_game_collections(collection_id)
+
+    print(f"Game in collection {collection_name}:")
+
+    if not games_in_collection:
+        print("No games")
+    else:
+        for game in games_in_collection:
+            print(f"id={game[0]} name={game[1]}, esrb={game[2]}")
+
     while True:
         view_option = input("(A)dd | (D)elete | (P)lay | (R)andom play | (B)ack \n")
         if view_option.upper() == "A":
-            game_name = input("Enter name of the game you wish to add to collection (leave blank to go back): ")
-            if game_name == "":
+            game_id = input("Enter id of the game you wish to add to collection (leave blank to go back): ")
+
+            if game_id == "":
                 continue
-            elif game_name.upper() in temp_game_list:
-                add_to_collection(collection_name, game_name)
-            else:
-                print("No such game exists")
+
+            game = search_game_by_id(game_id)
+
+            if not game:
+                print("No game found")
                 continue
+
+            add_game_to_collection(collection_id=collection_id, video_game_id=game[0][0])
+            print(f"Game {game[0][1]} added")
         elif view_option.upper() == "D":
-            game_name = input("Enter name of the game you wish to delete from collection (leave blank to go back): ")
-            if game_name == "":
+            game_id = input("Enter name of the game you wish to delete from collection (leave blank to go back): ")
+
+            if game_id == "":
                 continue
-            elif game_name.upper() in temp_game_list:
-                delete_from_collection(collection_name, game_name)
-            else:
-                print("No such game in collection")
-                continue
+
+            delete_game_from_collection(collection_id=collection_id, game_id=int(game_id))
+            print("Game deleted")
+
         elif view_option.upper() == "P":
-            if len(temp_game_list) == 0:
+            if len(games_in_collection) == 0:
                 print("Collection is empty. Try again")
             else:
-                game_name = input("Enter name of the game you wish to play (leave blank to go back): ")
-                if game_name == "":
+                game_id = input("Enter id of the game you wish to play (leave blank to go back): ")
+                if game_id == "":
                     continue
-                elif game_name in temp_game_list:
+
+                matching_row = list(filter(lambda col: col[0] == int(game_id), games_in_collection))
+
+                if matching_row:
                     # check if the game is in this collection...
-                    play_game(game_name)
+                    play_game(game_id=matching_row[0][0], name=matching_row[0][1])
                 else:
                     print("No such game in collection...")
         elif view_option.upper() == "R":
-            if len(temp_game_list) == 0:
+            if len(games_in_collection) == 0:
                 print("Collection is empty. Try again")
             else:
-                temp_int = random.randint(0, len(temp_game_list)-1)
+                temp_int = random.randint(0, len(games_in_collection)-1)
+                chosen = games_in_collection[temp_int]
                 # from 0 to end of list containing all games in the collection
-                print("Random game chosen is '" + temp_game_list[temp_int] + "'")
-                play_game(temp_game_list[temp_int])
+                print("Random game chosen is '" + chosen[1] + "'")
+                play_game(game_id=chosen[0], name=chosen[1])
 
 
-def add_to_collection(collection_name, game_name):
-    # sql statement to add game to collection
-    print("stub game added")
+def rename_collection(collection_id, collection_name):
+    new_name = input("Enter new name for collection: '" + collection_name + "' : ")
+
+    update_collection_name(collection_id=collection_id, name=new_name)
+
+    print(f"Collection {collection_name} renamed to {new_name}")
+
     return
 
 
-def delete_from_collection(collection_name, game_name):
-    # sql statement to remove game from collection
-    print("stub game removed")
-    return
-
-
-def rename_collection(name):
-    newname = input("Enter new name for collection: '" + name + "' : ")
-    # sql statement to update collection name
-    return
-
-
-def delete_collection(name):
-    # sql statement to delete collection
-    # potentially add error processing in case collection name does not exist or mistyped?
-    return
-
-
-def videogames_processing(user_id):
+def videogames_processing(player_id):
     while True:
         vg_option = input("(S)tore | (L)ibrary | (B)ack \n")
         if vg_option.upper() == "B":
@@ -278,7 +287,7 @@ def library_processing():
     return
 
 
-def play_game(name):
+def play_game(game_id, name):
     while True:
         print("Starting the game '" + name + "'")
         temp = input("(E)xit to leave the game.. \n")
@@ -287,20 +296,20 @@ def play_game(name):
     return
 
 
-def user_processing(user_id):
+def user_processing(player_id):
     while True:
         user_option = input("(S)earch by email | (F)ollow list | (B)ack \n")
         if user_option.upper() == "B":
             break
         elif user_option.upper() == "F":
-            follow_list(user_id)
+            follow_list(player_id)
         elif user_option.upper() == "S":
             email = input("Enter email to search for (leave blank to go back): ")
             search_users(email)
     return
 
 
-def follow_list(user_id):
+def follow_list(player_id):
     while True:
         temp_username_list = []
         # sql statement to show all the users followed
@@ -348,17 +357,17 @@ def follow_user(username):
 
 
 def start_ui():
-    # add user_id as the second value for the return of login...?
-    logged_in, user_id = login()
+    # add player_id as the second value for the return of login...?
+    logged_in, player_id = login()
     while logged_in:
         print("Main menu")
         menu_option = input("(C)ollections | (V)ideogames | (U)ser | (Q)uit \n")
         if menu_option.upper() == "C":
-            collection_processing(user_id)
+            collection_processing(player_id)
         elif menu_option.upper() == "V":
-            videogames_processing(user_id)
+            videogames_processing(player_id)
         elif menu_option.upper() == "U":
-            user_processing(user_id)
+            user_processing(player_id)
         elif menu_option.upper() == "Q":
             print("Logging out!")
             break
