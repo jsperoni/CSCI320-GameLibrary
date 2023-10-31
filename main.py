@@ -1,6 +1,8 @@
 import random
 
+from create_collection import create_collection
 from create_player import create_player
+from search_collections import search_collection
 from search_player import does_username_exist, does_password_match
 
 
@@ -39,42 +41,49 @@ def login():
 
 
 def collection_processing(user_id):
-    page_length = 10
-    current_page = 1
-    temp_collections_list = []
+    # page_length = 10
+    # current_page = 1
+    collections_list = search_collection(user_id)
+
+    print("Collections:")
+
+    if not collections_list:
+        print("No collections")
+
+    for index, col in enumerate(collections_list):
+        print(f"{0}: name={col[0]}, games={col[1]}, total_play_time (H:M)={round(col[2])}")
+
+
     while True:
         # sql query to get list of all collections should be inside while loop
-        collection_option = input("(C)reate | (V)iew | (N)ext page | (P)revious page | (B)ack \n")
+        # collection_option = input("(C)reate | (V)iew | (N)ext page | (P)revious page | (B)ack \n")
+        collection_option = input("(C)reate | (V)iew | (B)ack \n")
         if collection_option.upper() == "C":
             collection_name = input("Enter collection name to create (leave empty to go back): ")
             if collection_name == "":
                 return
             else:
-                create_collection(collection_name)
+                create_collection(player_id=user_id, collection_name=collection_name)
+                print("Collection created")
         elif collection_option.upper() == "V":
             collection_name = input("Enter collection name to look into (leave empty to go back): ")
             if collection_name == "":
                 return
-            elif collection_name.upper() in temp_collections_list:
+            elif collection_name.upper() in collections_list:
                 view_collection(collection_name)
             else:
                 print("Collection not found")
                 continue
         elif collection_option.upper() == "B":
             break
-        elif collection_option.upper() == "N":
-            # if current_page != ((len(list_of_all_games)/10)+1)
-            current_page += 1
-        elif collection_option.upper() == "P":
-            if current_page != 0:
-                current_page -= 1
+        # elif collection_option.upper() == "N":
+        #     # if current_page != ((len(list_of_all_games)/10)+1)
+        #     current_page += 1
+        # elif collection_option.upper() == "P":
+        #     if current_page != 0:
+        #         current_page -= 1
         else:
             print("Unknown command... Try again")
-    return
-
-
-def create_collection(collection_name):
-    # SQL statement to create collection with "collection_name" as name
     return
 
 
@@ -219,7 +228,6 @@ def buy_game(game_name):
     else:
         print("Unexpected input. Returning back to store")
         return
-
 
 
 def search_games():

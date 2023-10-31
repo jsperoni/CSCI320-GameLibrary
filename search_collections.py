@@ -6,8 +6,7 @@ def search_collection(player_id):
     SELECT
         c.name,
         COUNT(DISTINCT gc.game_id),
-        SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 3600),
-        (SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 60)::integer) %% 60
+        SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 3600)
     FROM
         collection c
     JOIN
@@ -21,7 +20,7 @@ def search_collection(player_id):
     ORDER BY
         c.name ASC
     """
-    return execute_query(sql_command, params=(2596,))
+    return execute_query(sql_command, params=(player_id,))
 
 if __name__ == '__main__':
     print(search_collection(player_id=2596))
