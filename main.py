@@ -1,4 +1,6 @@
 import random
+from time import time
+from datetime import datetime
 
 from add_game_to_collection import add_game_to_collection
 from create_access_date import create_access_date
@@ -11,20 +13,26 @@ from search_game_collections import search_game_collections
 from search_games import search_game_by_id
 from search_player import does_username_exist, does_password_match
 from update_collection_name import update_collection_name
+from create_play_session import create_play_session
 
+# global variable so we dont have to pass it around always
+player_id = ""
 
 def login():
+    global player_id
+
     while True:
         username = input("Enter username: ")
-        player_id = does_username_exist(username)
+        local_player_id = does_username_exist(username)
 
-        if player_id:
+        if local_player_id:
             password = input("Enter password: ")
             if does_password_match(username, password):
-                print("Logged in!")
-                create_access_date(player_id)
+                print(f"Logged in with id {local_player_id}!")
+                create_access_date(local_player_id)
+                player_id = local_player_id
 
-                return True, player_id
+                return True
             else:
                 print("Invalid password")
         else:
@@ -35,22 +43,23 @@ def login():
             elif temp.upper() == "Y":
                 password = input("Enter password: ")
 
-                player_id = create_player(
+                local_player_id = create_player(
                     username=username,
                     password=password,
                     email=f"{username}@gmail.com",
                     first_name=f"{username} first name",
                     last_name=f"{username} last name"
                 )
-                create_access_date(player_id)
+                create_access_date(local_player_id)
+                player_id = local_player_id
 
-                return True, player_id
+                return True
             else:
                 print("Unknown input... Start again")
                 continue
 
 
-def collection_processing(player_id):
+def collection_processing():
     collections_list = search_collection(player_id)
 
     print("Collections:")
@@ -183,7 +192,7 @@ def rename_collection(collection_id, collection_name):
     return
 
 
-def videogames_processing(player_id):
+def videogames_processing():
     while True:
         vg_option = input("(S)tore | (L)ibrary | (B)ack \n")
         if vg_option.upper() == "B":
@@ -271,7 +280,7 @@ def library_processing():
                 continue
             elif game_name in search_result:  # need to change to list of games in library
                 # check if the game is in this collection...
-                play_game(game_name)
+                play_game(name=game_name)
             else:
                 print("No such game in library...")
         elif library_option.upper() == "R":
@@ -288,28 +297,40 @@ def library_processing():
 
 
 def play_game(game_id, name):
+    start_time = time()
+    start_time_formatted = datetime.fromtimestamp(start_time).strftime('%Y-%m-%d %H:%M:%S')
+
     while True:
         print("Starting the game '" + name + "'")
         temp = input("(E)xit to leave the game.. \n")
         if temp.upper() == "E":
             break
+
+    end_time = time()
+    end_time_formatted = datetime.fromtimestamp(end_time).strftime('%Y-%m-%d %H:%M:%S')
+
+    create_play_session(player_id=player_id, game_id=game_id, start_time=start_time_formatted,
+                        end_time=end_time_formatted)
+
+    print(f"Played the game for {round(end_time - start_time, 2)} seconds")
+
     return
 
 
-def user_processing(player_id):
+def user_processing():
     while True:
         user_option = input("(S)earch by email | (F)ollow list | (B)ack \n")
         if user_option.upper() == "B":
             break
         elif user_option.upper() == "F":
-            follow_list(player_id)
+            follow_list()
         elif user_option.upper() == "S":
             email = input("Enter email to search for (leave blank to go back): ")
             search_users(email)
     return
 
 
-def follow_list(player_id):
+def follow_list():
     while True:
         temp_username_list = []
         # sql statement to show all the users followed
@@ -358,16 +379,16 @@ def follow_user(username):
 
 def start_ui():
     # add player_id as the second value for the return of login...?
-    logged_in, player_id = login()
+    logged_in = login()
     while logged_in:
         print("Main menu")
         menu_option = input("(C)ollections | (V)ideogames | (U)ser | (Q)uit \n")
         if menu_option.upper() == "C":
-            collection_processing(player_id)
+            collection_processing()
         elif menu_option.upper() == "V":
-            videogames_processing(player_id)
+            videogames_processing()
         elif menu_option.upper() == "U":
-            user_processing(player_id)
+            user_processing()
         elif menu_option.upper() == "Q":
             print("Logging out!")
             break
