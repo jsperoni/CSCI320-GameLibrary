@@ -8,6 +8,7 @@ from create_collection import create_collection
 from create_player import create_player
 from delete_collection import delete_collection
 from delete_game_from_collection import delete_game_from_collection
+from find_all_followers import find_following
 from follow_player import create_follow, delete_follow
 from search_collections import search_collection
 from search_game_collections import search_game_collections
@@ -320,7 +321,7 @@ def play_game(game_id, name):
 
 def user_processing():
     while True:
-        user_option = input("(S)earch by email | (F)ollow list | (B)ack \n")
+        user_option = input("(S)earch by email | (F)ollowing list | (B)ack \n")
         if user_option.upper() == "B":
             break
         elif user_option.upper() == "F":
@@ -332,19 +333,30 @@ def user_processing():
 
 
 def follow_list():
+    following = find_following(player_id)
+
+    if not following:
+        print("You have no followers")
+        return
+
+    for player in following:
+        print(f"id={player[0]}, username={player[1]}")
+
     while True:
-        temp_username_list = []
-        # sql statement to show all the users followed
-        opt = input("(B)ack | (U)nfollow")
+        opt = input("(B)ack | (U)nfollow \n")
         if opt.upper() == "B":
             break
         elif opt.upper() == "U":
-            username = input("Enter the user to unfollow (leave blank to go back): ")
-            if username == "":
+            user_id = input("Enter the user id to unfollow (leave blank to go back): ")
+
+            if user_id == "":
                 continue
-            elif username.upper in temp_username_list:
-                #unfollow_user(username)
-                print("yes")
+
+            matching_row = list(filter(lambda col: col[0] == int(user_id), following))
+
+            if matching_row:
+                delete_follow(unfollowing_id=matching_row[0][0], unfollower_id=player_id)
+                print(f"{matching_row[0][1]} unfollowed")
             else:
                 print("User not found")
                 continue
