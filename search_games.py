@@ -1,5 +1,6 @@
 from db_config import execute_query
 
+<<<<<<< HEAD
 
 def post_processing(query, param):
     results = execute_query(query, (param,))
@@ -18,6 +19,13 @@ def post_processing(query, param):
                 final[counter].append([piece])
         key = entry[0]
     return final
+=======
+def search_game_by_id(game_id):
+    sql = "SELECT * FROM game WHERE game_id = %s"
+
+    return execute_query(sql, (game_id,))
+
+>>>>>>> refs/remotes/origin/main
 # assumes sort is passed in sql formal
 def search_game_name(name, sort="g.title ASC"):
     param = "%" + name + "%"
@@ -196,9 +204,17 @@ def search_game_genre(genre, sort="g.title ASC"):
     return post_processing(query, param)
 
 if __name__ == '__main__':
+<<<<<<< HEAD
     print(search_game_name("Galactic")) # works, however output is not as expected
     # print(search_game_platform("PlayStation")) # works ^
     # print(search_game_date("2023-08-31")) # ^
     # print(search_game_devs("am")) # ^
     # print(search_game_price(21.62)) # ^ 
+=======
+    print(search_game_name("Galactic")) #works, however output is not as expected
+    # print(search_game_platform("PlayStation")) works ^
+    # print(search_game_date("2023-08-31")) ^
+    # print(search_game_devs("am")) ^
+    # print(search_game_price(21.62)) ^ 
+>>>>>>> refs/remotes/origin/main
     # print(search_game_genre("Tower Defense")) # ^

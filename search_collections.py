@@ -4,24 +4,24 @@ from db_config import execute_query
 def search_collection(player_id):
     sql_command = """
     SELECT
+        c.collection_id,
         c.name,
-        COUNT(DISTINCT gc.game_id),
-        SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 3600),
-        (SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 60)::integer) %% 60
+        COALESCE(COUNT(DISTINCT gc.game_id), 0) AS game_count,
+        COALESCE(SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 3600), 0) AS hours_played
     FROM
         collection c
-    JOIN
+    LEFT JOIN
         game_collection gc ON c.collection_id = gc.collection_id
     LEFT JOIN
         plays p ON gc.game_id = p.game_id AND c.player_id = p.player_id
     WHERE
         c.player_id = %s
     GROUP BY
-        c.name
+        c.collection_id, c.name 
     ORDER BY
-        c.name ASC
+        c.name ASC;
     """
-    return execute_query(sql_command, params=(2596,))
+    return execute_query(sql_command, params=(player_id,))
 
 if __name__ == '__main__':
     print(search_collection(player_id=2596))
