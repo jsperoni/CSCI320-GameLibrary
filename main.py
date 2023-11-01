@@ -8,10 +8,11 @@ from create_collection import create_collection
 from create_player import create_player
 from delete_collection import delete_collection
 from delete_game_from_collection import delete_game_from_collection
+from follow_player import create_follow, delete_follow
 from search_collections import search_collection
 from search_game_collections import search_game_collections
 from search_games import search_game_by_id
-from search_player import does_username_exist, does_password_match
+from search_player import does_username_exist, does_password_match, search_player
 from update_collection_name import update_collection_name
 from create_play_session import create_play_session
 
@@ -342,38 +343,40 @@ def follow_list():
             if username == "":
                 continue
             elif username.upper in temp_username_list:
-                unfollow_user(username)
+                #unfollow_user(username)
+                print("yes")
             else:
                 print("User not found")
                 continue
     return
 
 
-def unfollow_user(username):
-    # sql statement to unfollow username
-    return
-
-
 def search_users(email):
+    result = search_player(column_name='email', value=email)
+
+    if not result:
+        print(f"No user with email {email} found")
+        return
+
+    # print username
+    username_of_search = result[0][1]
+    id_of_search = result[0][0]
+    print(f"User found: {username_of_search}")
+
     while True:
-        # sql command to search for user by email
-        username = "temp"
         # sql command to check if the user is already followed
         opt = input("(F)ollow | (U)nfollow | (B)ack \n")
         if opt.upper() == "B":
             break
         elif opt.upper() == "F":
-            follow_user(username)
+            create_follow(following_id=id_of_search, follower_id=player_id)
+            print(f"Followed {username_of_search}")
         elif opt.upper() == "U":
-            unfollow_user(username)
+            delete_follow(unfollowing_id=id_of_search, unfollower_id=player_id)
+            print(f"Unfollowed {username_of_search}")
         else:
             print("Unknown command. Try again")
             continue
-    return
-
-
-def follow_user(username):
-    # sql statement to follow username
     return
 
 
