@@ -1,6 +1,11 @@
 from db_config import execute_query
 
 # extract epoch based on # https://www.postgresql.org/docs/8.1/functions-datetime.html
+#
+# was getting error below when i wasn't type casting
+# [42883] ERROR: function mod(double precision, integer) does not exist
+# Hint: No function matches the given name and argument types.
+# You might need to add explicit type casts. Position: 220
 def search_collection(player_id):
     sql_command = """
     SELECT
