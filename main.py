@@ -153,12 +153,12 @@ def view_collection_games(collection_id, collection_name):
                 print("No game found")
                 continue
             if does_player_have_platform_by_name(player_id, game[0][2]):
-                add_game_to_collection(collection_id=collection_id, video_game_id=game[0][0][0])
+                add_game_to_collection(collection_id=collection_id, player_id=player_id, video_game_id=game[0][0][0])
                 print(f"Game {game[0][1]} added")
             else:
                 warn = input("You do not own needed platform. Continue? \n (Y)es/(N)o \n")
                 if warn.upper() == "Y":
-                    add_game_to_collection(collection_id=collection_id, video_game_id=game[0][0][0])
+                    add_game_to_collection(collection_id=collection_id, player_id=player_id, video_game_id=game[0][0][0])
                     print(f"Game {game[0][1]} added")
 
         elif view_option.upper() == "D":
