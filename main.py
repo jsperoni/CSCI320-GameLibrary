@@ -272,8 +272,7 @@ def search_games():
     print("You can search by:")
     search_options = input("(N)ame | (P)latform | (R)elease date | (D)evelopers | (G)enre | (C)ost \n")
     print("You can sort by:")
-    sort_options = input("(N)ame | (P)rice | (G)enre | (R)elease year \n")
-    sort_direction = input("(A)scending | (D)escending \n")
+    sort_options = input("(N)ame | (P)rice | (G)enre | (R)elease year | (S)kip\n")
     if sort_options.upper() == "N":
         sort ="g.title"
     elif sort_options.upper() == "P":
@@ -282,10 +281,14 @@ def search_games():
         sort ="ge.name"
     elif sort_options.upper() == "R":
         sort ="YEAR(r.release_date)"
-    if sort_direction.upper() == "A":
-        sort = sort + " ASC"
-    elif sort_direction.upper() == "D":
-        sort = sort + " DESC"
+    elif sort_options.upper() == "S":
+        sort = "g.title ASC, r.release_date DESC"
+    if sort_options.upper() != "S":
+        sort_direction = input("(A)scending | (D)escending \n")
+        if sort_direction.upper() == "A":
+            sort = sort + " ASC"
+        elif sort_direction.upper() == "D":
+            sort = sort + " DESC"
     if search_options.upper() == "N": 
         temp_output_list = search_game_name(input("Enter the name of the game: ").upper(), sort)
     elif search_options.upper() == "P":
