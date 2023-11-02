@@ -23,6 +23,8 @@ from search_games import (
 from search_player import does_username_exist, does_password_match, search_player
 from update_collection_name import update_collection_name
 from create_play_session import create_play_session
+from create_update_rating import rate
+from search_player_platform import does_player_have_platform, does_player_have_platform_by_name
 # global variable so we dont have to pass it around always
 player_id = ""
 
@@ -50,7 +52,6 @@ def login():
                 continue
             elif temp.upper() == "Y":
                 password = input("Enter password: ")
-
                 local_player_id = create_player(
                     username=username,
                     password=password,
@@ -84,7 +85,7 @@ def collection_processing():
         if collection_option.upper() == "C":
             collection_name = input("Enter collection name to create (leave empty to go back): ")
             if collection_name == "":
-                return
+                continue
             else:
                 create_collection(player_id=player_id, collection_name=collection_name)
                 print("Collection created")
@@ -148,13 +149,18 @@ def view_collection_games(collection_id, collection_name):
                 continue
 
             game = search_game_id(game_id)
-
             if not game:
                 print("No game found")
                 continue
+            if does_player_have_platform_by_name(player_id, game[0][2]):
+                add_game_to_collection(collection_id=collection_id, video_game_id=game[0][0][0])
+                print(f"Game {game[0][1]} added")
+            else:
+                warn = input("You do not own needed platform. Continue? \n (Y)es/(N)o \n")
+                if warn.upper() == "Y":
+                    add_game_to_collection(collection_id=collection_id, video_game_id=game[0][0][0])
+                    print(f"Game {game[0][1]} added")
 
-            add_game_to_collection(collection_id=collection_id, video_game_id=game[0][0])
-            print(f"Game {game[0][1]} added")
         elif view_option.upper() == "D":
             game_id = input("Enter name of the game you wish to delete from collection (leave blank to go back): ")
 
@@ -188,7 +194,8 @@ def view_collection_games(collection_id, collection_name):
                 # from 0 to end of list containing all games in the collection
                 print("Random game chosen is '" + chosen[1] + "'")
                 play_game(game_id=chosen[0], name=chosen[1])
-
+        elif view_option.upper() == "B":
+            return
 
 def rename_collection(collection_id, collection_name):
     new_name = input("Enter new name for collection: '" + collection_name + "' : ")
@@ -253,18 +260,17 @@ def store_processing():
             if game_name == "":
                 continue
             elif game_name.upper() in search_result:  # would need to change 'search_result' to list containing games
+
                 buy_game(game_name)
             else:
                 print(game_name + " does not exist. Try again")
 
         elif store_option.upper() == "R":
-            game_to_rate = input("Enter the name of the game you wish to rate (leave blank to go back): ")
+            game_to_rate = input("Enter the id of the game you wish to rate (leave blank to go back): ")
             if game_to_rate == "":
                 continue
-            elif game_to_rate.upper in search_result:
-                rate_game(game_to_rate)
             else:
-                print("Game not found")
+                rate_game(game_to_rate)
         else:
             print("Unknown command... Try again")
     return
@@ -316,12 +322,13 @@ def search_games():
     return temp_output_list
 
 
-def rate_game(game_name):
-    rating = int(input("Enter the rating for '" + game_name + "' (from 1 to 5"))
+def rate_game(game_id):
+    rating = int(input("Enter the rating for '" + game_id + "' (from 1 to 5"))
     if rating > 5 or rating < 1:
         print("Invalid argument")
     else:
         # sql statement to rate the game
+        rate(player_id, game_id, rating)
         return
 
 
@@ -344,13 +351,11 @@ def library_processing():
             else:
                 print("No such game in library...")
         elif library_option.upper() == "R":
-            game_to_rate = input("Enter the name of the game you wish to rate (leave blank to go back): ")
+            game_to_rate = input("Enter id of the game you wish to rate (leave blank to go back): ")
             if game_to_rate == "":
                 continue
-            elif game_to_rate.upper in search_result:
-                rate_game(game_to_rate)
             else:
-                print("Game not found")
+                rate_game(game_to_rate)
         else:
             print("Unknown command... Try again")
     return
