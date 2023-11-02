@@ -22,7 +22,7 @@ def rate(player_id, game_id, rating):
     game_id = {game_id}
     """
 
-    result = execute_query(sql_command_1)
+    result = execute_query(sql_command_1, fetch_results=False)
     # print(result)
 
     if not result:
