@@ -323,7 +323,7 @@ def search_games():
 
 
 def rate_game(game_id):
-    rating = int(input("Enter the rating for '" + game_id + "' (from 1 to 5"))
+    rating = int(input("Enter the rating for '" + game_id + "' (from 1 to 5): "))
     if rating > 5 or rating < 1:
         print("Invalid argument")
     else:
