@@ -224,7 +224,7 @@ def store_processing():
     search_result = []  # list of all games initially, then changes when user performs search...
     while True:
         # not sure about the structure; need further discussion
-        store_option = input("(S)earch | (B)uy | (R)ate | (E)xit \n")
+        store_option = input("(S)earch | (R)ate | (E)xit \n")
         if store_option.upper() == "E":
             break
         elif store_option.upper() == "S":
@@ -255,15 +255,6 @@ def store_processing():
                         print(name)
                     else:
                         print(name, ", ", end="")
-        elif store_option.upper() == "B":
-            game_name = input("Enter the name of the game to buy (leave blank to go back): ")
-            if game_name == "":
-                continue
-            elif game_name.upper() in search_result:  # would need to change 'search_result' to list containing games
-
-                buy_game(game_name)
-            else:
-                print(game_name + " does not exist. Try again")
 
         elif store_option.upper() == "R":
             game_to_rate = input("Enter the id of the game you wish to rate (leave blank to go back): ")
@@ -274,18 +265,6 @@ def store_processing():
         else:
             print("Unknown command... Try again")
     return
-
-
-def buy_game(game_name):
-    confirmation = input("(A)ccept | (R)eject")
-    if confirmation.upper() == "A":
-        # sql statement to buy game
-        print("Game '" + game_name + "' was successfully bought!")
-    elif confirmation.upper() == "R":
-        return
-    else:
-        print("Unexpected input. Returning back to store")
-        return
 
 
 def search_games():
