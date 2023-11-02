@@ -24,6 +24,7 @@ def search_game_name(name, sort="g.title ASC, r.release_date DESC"):
     param = "%" + name + "%"
     query = """
     SELECT
+        g.game_id,
         g.title,
         p.name,
         c.name,
@@ -52,6 +53,7 @@ def search_game_name(name, sort="g.title ASC, r.release_date DESC"):
 def search_game_id(id, sort="g.title ASC, r.release_date DESC"):
     query = """
     SELECT
+        g.game_id,
         g.title,
         p.name,
         c.name,
@@ -82,6 +84,7 @@ def search_game_platform(platform, sort="g.title ASC, r.release_date DESC"):
     param = "%" + platform + "%"
     query = """
     SELECT
+        g.game_id,
         g.title,
         p.name,
         c.name,
@@ -113,6 +116,7 @@ def search_game_date(date, sort="g.title ASC, r.release_date DESC"):
     param = "%" + date + "%"
     query = """
     SELECT
+        g.game_id,
         g.title,
         p.name,
         c.name,
@@ -142,6 +146,7 @@ def search_game_devs(developer, sort="g.title ASC, r.release_date DESC"):
     param = "%" + developer + "%"
     query = """
     SELECT
+        g.game_id,
         g.title,
         p.name,
         c.name,
@@ -200,6 +205,7 @@ def search_game_genre(genre, sort="g.title ASC, r.release_date DESC"):
     param = "%" + genre + "%"
     query = """
     SELECT
+        g.game_id,
         g.title,
         p.name,
         c.name,
@@ -227,9 +233,10 @@ def search_game_genre(genre, sort="g.title ASC, r.release_date DESC"):
 
 if __name__ == '__main__':
     # print(search_game_id(16))
-    print(search_game_name("GALACTIC"))
+    search_game_name("GALACTIC")
     # print(search_game_platform("PlayStation"))
     # print(search_game_date("2023-08-31"))
     # print(search_game_devs("am"))
     # print(search_game_price(21.62))
     # print(search_game_genre("Tower Defense"))
+    

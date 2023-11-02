@@ -222,6 +222,32 @@ def store_processing():
             break
         elif store_option.upper() == "S":
             search_result = search_games()
+            for i in range(len(search_result)):
+                entry = search_result[i]
+                print(i+1, ".\n\tGame Title:", entry[1][0], "\n\tPlatforms: ", end="")
+                for name in entry[2]:
+                    if name == entry[2][-1]:
+                        print(name)
+                    else:
+                        print(name, ", ", end="")
+                print("\tDevelopers: ", end="")
+                for name in entry[3]:
+                    if name == entry[3][-1]:
+                        print(name)
+                    else:
+                        print(name, ", ", end="")
+                print("\tPrices: ", end="")
+                for price in entry[4]:
+                    if price == entry[4][-1]:
+                        print(price)
+                    else:
+                        print(price, ", ", end="")
+                print("\tGenres: ", end="")
+                for name in entry[5]:
+                    if name == entry[5][-1]:
+                        print(name)
+                    else:
+                        print(name, ", ", end="")
         elif store_option.upper() == "B":
             game_name = input("Enter the name of the game to buy (leave blank to go back): ")
             if game_name == "":
@@ -286,8 +312,7 @@ def search_games():
     elif search_options.upper() == "G":
         temp_output_list = search_game_genre(input("Enter the name of the genre: ").upper(), sort)
     elif search_options.upper() == "C":
-        temp_output_list = search_game_platform(float(input("Enter the price (please omit any '$'): ")), sort)
-    print(temp_output_list)
+        temp_output_list = search_game_price(float(input("Enter the price (please omit any '$'): ")), sort)
     return temp_output_list
 
 
