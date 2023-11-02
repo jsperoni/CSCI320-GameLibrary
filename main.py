@@ -162,7 +162,7 @@ def view_collection_games(collection_id, collection_name):
                     print(f"Game {game[0][1]} added")
 
         elif view_option.upper() == "D":
-            game_id = input("Enter name of the game you wish to delete from collection (leave blank to go back): ")
+            game_id = input("Enter id of the game you wish to delete from collection (leave blank to go back): ")
 
             if game_id == "":
                 continue
