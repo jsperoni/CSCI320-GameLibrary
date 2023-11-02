@@ -28,7 +28,7 @@ def execute_query(query, params=None, fetch_results=True):
                     dbname=pg_database,
                     user=pg_user,
                     password=pg_password,
-                    host=tunnel.local_bind_host,
+                    host='localhost',
                     port=tunnel.local_bind_port
             ) as conn:
                 with conn.cursor() as cursor:

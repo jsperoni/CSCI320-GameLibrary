@@ -12,11 +12,17 @@ from find_all_followers import find_following
 from follow_player import create_follow, delete_follow
 from search_collections import search_collection
 from search_game_collections import search_game_collections
-from search_games import search_game_by_id
+from search_games import (
+    search_game_id,
+    search_game_name,
+    search_game_price,
+    search_game_platform,
+    search_game_genre,
+    search_game_devs,
+    search_game_date )
 from search_player import does_username_exist, does_password_match, search_player
 from update_collection_name import update_collection_name
 from create_play_session import create_play_session
-
 # global variable so we dont have to pass it around always
 player_id = ""
 
@@ -141,7 +147,7 @@ def view_collection_games(collection_id, collection_name):
             if game_id == "":
                 continue
 
-            game = search_game_by_id(game_id)
+            game = search_game_id(game_id)
 
             if not game:
                 print("No game found")
@@ -254,7 +260,34 @@ def search_games():
     temp_output_list = []
     print("You can search by:")
     search_options = input("(N)ame | (P)latform | (R)elease date | (D)evelopers | (G)enre | (C)ost \n")
-    #
+    print("You can sort by:")
+    sort_options = input("(N)ame | (P)rice | (G)enre | (R)elease year \n")
+    sort_direction = input("(A)scending | (D)escending \n")
+    if sort_options.upper() == "N":
+        sort ="g.title"
+    elif sort_options.upper() == "P":
+        sort ="p.name"
+    elif sort_options.upper() == "G":
+        sort ="ge.name"
+    elif sort_options.upper() == "R":
+        sort ="YEAR(r.release_date)"
+    if sort_direction.upper() == "A":
+        sort = sort + " ASC"
+    elif sort_direction.upper() == "D":
+        sort = sort + " DESC"
+    if search_options.upper() == "N": 
+        temp_output_list = search_game_name(input("Enter the name of the game: ").upper(), sort)
+    elif search_options.upper() == "P":
+        temp_output_list = search_game_platform(input("Enter the name of the platform: ").upper(), sort)
+    elif search_options.upper() == "R":
+        temp_output_list = search_game_date(input("Enter the release date in format: YYYY-MM-DD: ").upper(), sort)
+    elif search_options.upper() == "D":
+        temp_output_list = search_game_devs(input("Enter the name of the developers: ").upper(), sort)
+    elif search_options.upper() == "G":
+        temp_output_list = search_game_genre(input("Enter the name of the genre: ").upper(), sort)
+    elif search_options.upper() == "C":
+        temp_output_list = search_game_platform(float(input("Enter the price (please omit any '$'): ")), sort)
+    print(temp_output_list)
     return temp_output_list
 
 
