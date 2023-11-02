@@ -77,7 +77,8 @@ def collection_processing():
         print("No collections")
     else:
         for collection in collections_list:
-            print(f"id={collection[0]} name={collection[1]}, games={collection[2]}, total_play_time (H:M)={round(collection[3])}")
+            print(f"id={collection[0]} name={collection[1]}, games={collection[2]}, "
+                  f"total_play_time (H:M)={collection[3]}:{collection[4]}")
 
     while True:
         # sql query to get list of all collections should be inside while loop

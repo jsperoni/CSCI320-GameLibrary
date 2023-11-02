@@ -4,10 +4,11 @@ from db_config import execute_query
 def search_collection(player_id):
     sql_command = """
     SELECT
-        c.collection_id,
-        c.name,
-        COALESCE(COUNT(DISTINCT gc.game_id), 0) AS game_count,
-        COALESCE(SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time)) / 3600), 0) AS hours_played
+       c.collection_id,
+       c.name,
+       COALESCE(COUNT(DISTINCT gc.game_id), 0) AS game_count,
+       COALESCE(FLOOR(SUM(EXTRACT(EPOCH FROM (P.end_time - P.start_time)) / 3600)), 0) AS hours_played,
+       COALESCE(FLOOR((SUM(EXTRACT(EPOCH FROM (P.end_time - P.start_time)))::integer %% 3600) / 60), 0) AS minutes_played
     FROM
         collection c
     LEFT JOIN
