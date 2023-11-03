@@ -23,14 +23,16 @@ def rate(player_id, game_id, rating):
     """
 
     result = execute_query(sql_command_1, fetch_results=False)
-    #print(result)
+    # print(result)
 
-    #if not result:
-        #print('Inserting new rating entry.')
-        #print(execute_query(sql_command_2), fetch_results=False)
-    #else:
-        #print ('DEBUG: Result was not empty. Updating existing rating entry.')
-        #print(execute_query(sql_command_3), fetch_results=False)
+    if not result:
+        # print('DEBUG: Result was empty. Inserting new rating entry.')
+        # print(execute_query(sql_command_2))
+        execute_query(sql_command_2, fetch_results=False)
+    else:
+        # print ('DEBUG: Result was not empty. Updating existing rating entry.')
+        # print(execute_query(sql_command_3))
+        execute_query(sql_command_3, fetch_results=False)
 
 
 if __name__ == '__main__':
