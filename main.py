@@ -10,6 +10,7 @@ from delete_collection import delete_collection
 from delete_game_from_collection import delete_game_from_collection
 from find_all_followers import find_following
 from follow_player import create_follow, delete_follow
+from get_collection_number import get_collection_number
 from search_collections import search_collection
 from search_game_collections import search_game_collections
 from search_games import (
@@ -70,7 +71,9 @@ def login():
 
 def collection_processing():
     collections_list = search_collection(player_id)
-
+    collections_count = get_collection_number(player_id)[0][0]
+    
+    print(f"{collections_count} collections found")
     print("Collections:")
 
     if not collections_list:
