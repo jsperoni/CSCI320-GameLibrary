@@ -12,6 +12,7 @@ from find_all_followers import find_following
 from follow_player import create_follow, delete_follow
 from get_collection_number import get_collection_number
 from get_follow_counts import get_follows_count
+from get_top_10_video_games import get_top_10_video_games_highest_rating, get_top_10_video_games_most_played, get_top_10_video_games_most_played_and_rating
 from search_collections import search_collection
 from search_game_collections import search_game_collections
 from search_games import (
@@ -211,16 +212,58 @@ def rename_collection(collection_id, collection_name):
 
     return
 
+def metrics_processing():
+    while True:
+        print("1. View top 10 video games by your highest rating")
+        print("2. View top 10 video games by your play time")
+        print("3. View top 10 video games by play time and rating")
+        print("4. Top 20 most popular video games in last 90 days")
+        print("5. Top 20 most popular video games among your followers")
+        print("6. Top 5 new releases of the month")
+        print("7. For your recommendations")
+        option = input("")
+        print("")
+
+        if option.upper() == '1':
+            print("Top 10 video games by your highest rating:")
+            games = get_top_10_video_games_highest_rating(player_id)
+            for index, game in enumerate(games):
+                print(f"{index}: title={game[0]}, rating={game[1]}")     
+        elif option.upper() == '2':
+            print("Top 10 video games by your play time:")
+            games = get_top_10_video_games_most_played(player_id)
+            for index, game in enumerate(games):
+                print(f"{index}: title={game[0]}, playTimeInSeconds={game[1]}")
+        elif option.upper() == '3':
+            print("Top top 10 video games by play time and rating:")
+            games = get_top_10_video_games_most_played_and_rating(player_id)
+            print(games)
+            for index, game in enumerate(games):
+                print(f"{index}: title={game[0]}, rating={game[1]}, playTimeInSeconds={game[2]}")
+        elif option.upper() == '4':
+            print()
+        elif option.upper() == '5':
+            print()
+        elif option.upper() == '6':
+            print()
+        elif option.upper() == '7':
+            print()
+        else:
+            print("Unknown command... Try again")
+        
+        print("")
 
 def videogames_processing():
     while True:
-        vg_option = input("(S)tore | (L)ibrary | (B)ack \n")
+        vg_option = input("(S)tore | (L)ibrary | (M)etrics | (B)ack \n")
         if vg_option.upper() == "B":
             return
         elif vg_option.upper() == "S":
             store_processing()
         elif vg_option.upper() == "L":
             library_processing()
+        elif vg_option.upper() == "M":
+            metrics_processing()
         else:
             print("Unknown command... Try again")
 
