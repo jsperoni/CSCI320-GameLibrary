@@ -11,6 +11,7 @@ from delete_game_from_collection import delete_game_from_collection
 from find_all_followers import find_following
 from follow_player import create_follow, delete_follow
 from get_collection_number import get_collection_number
+from get_follow_counts import get_follows_count
 from search_collections import search_collection
 from search_game_collections import search_game_collections
 from search_games import (
@@ -383,11 +384,16 @@ def user_processing():
 
 def follow_list():
     following = find_following(player_id)
+    followers_count, following_count = get_follows_count(player_id)
+
+    print(f"You have {followers_count} followers")
+    print(f"You are following {following_count}")
 
     if not following:
-        print("You have no followers")
+        print("No following")
         return
 
+    print("Following:")
     for player in following:
         print(f"id={player[0]}, username={player[1]}")
 
