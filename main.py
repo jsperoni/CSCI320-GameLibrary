@@ -28,8 +28,16 @@ from update_collection_name import update_collection_name
 from create_play_session import create_play_session
 from create_update_rating import rate
 from search_player_platform import does_player_have_platform, does_player_have_platform_by_name
+
 # global variable so we dont have to pass it around always
 player_id = ""
+
+def convert_seconds_to_hours_minutes(seconds):
+    hours, remainder = divmod(seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    # H:M:S
+    return f"{int(hours)}:{int(minutes)}:{int(seconds)}"
 
 def login():
     global player_id
@@ -233,13 +241,13 @@ def metrics_processing():
             print("Top 10 video games by your play time:")
             games = get_top_10_video_games_most_played(player_id)
             for index, game in enumerate(games):
-                print(f"{index}: title={game[0]}, playTimeInSeconds={game[1]}")
+                print(f"{index}: title={game[0]}, playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '3':
             print("Top top 10 video games by play time and rating:")
             games = get_top_10_video_games_most_played_and_rating(player_id)
             print(games)
             for index, game in enumerate(games):
-                print(f"{index}: title={game[0]}, rating={game[1]}, playTimeInSeconds={game[2]}")
+                print(f"{index}: title={game[0]}, rating={game[1]}, playTime(H:M:S)={convert_seconds_to_hours_minutes(game[2])}")
         elif option.upper() == '4':
             print()
         elif option.upper() == '5':

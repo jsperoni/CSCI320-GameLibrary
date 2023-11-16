@@ -37,5 +37,5 @@ def get_top_10_video_games_most_played_and_rating(player_id):
     ORDER BY total_play_seconds DESC, r.rating DESC NULLS LAST
     LIMIT 10;
     """
-    return execute_query(query, params=(player_id,))
+    return execute_query(query, params=(player_id,player_id,player_id,player_id,))
 
