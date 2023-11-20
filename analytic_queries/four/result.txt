@@ -1,0 +1,9 @@
+[(2, 'Action'), (5, 'Simulation'), (6, 'Strategy'), (6, 'Strategy'), (6, 'Strategy'), (10, 'Horror'),
+(12, 'Platformer'), (16, 'Stealth'), (21, 'Flight Simulator'), (21, 'Flight Simulator'), (22, 'Party'),
+(23, 'Roguelike'), (24, 'Dungeon Crawler'), (26, 'Point-and-Click'), (28, 'Card Battle'), (31, 'Turn-Based Strategy'),
+(34, 'Interactive Fiction'), (34, 'Interactive Fiction'), (37, 'Trivia'), (38, 'Board Game'), (40, 'Music'),
+(41, 'Crafting'), (45, 'Idle'), (45, 'Idle'), (45, 'Idle'), (48, 'Match-Three'), (57, 'RPG Maker'), (57, 'RPG Maker'),
+(58, 'Physics-Based'), (60, 'Aerial Combat'), (60, 'Aerial Combat'), (65, 'Rail Shooter'), (67, 'Driving'), (70, 'Detective'),
+(70, 'Detective'), (71, 'Cinematic'), (71, 'Cinematic'), (73, 'Naval Combat'), (75, 'Brawler'), (76, 'Social Simulation'),
+(77, 'Interactive Movie'), (85, 'Top-Down'), (87, 'Endless Runner'), (98, 'Mini Games')]
+
