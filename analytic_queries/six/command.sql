@@ -4,15 +4,15 @@ SELECT
         SELECT COUNT(*) FROM (
             SELECT player_id, collection_id FROM (
                 SELECT c.player_id, c.collection_id, gg.genre_id, COUNT(gg.game_id) as genre_count,
-                    (SELECT genre_id FROM (
-                        SELECT gg.genre_id, COUNT(gg.game_id) as cnt
-                        FROM plays p
-                        JOIN game_genre gg ON p.game_id = gg.game_id
-                        WHERE p.player_id = c.player_id
-                        GROUP BY gg.genre_id
-                        ORDER BY cnt DESC
-                        LIMIT 1
-                    ) as sub_max_genre) as favorite_genre_id
+                (SELECT genre_id FROM (
+                    SELECT gg.genre_id, SUM(EXTRACT(EPOCH FROM (p.end_time - p.start_time))) as total_play_time
+                    FROM plays p
+                    JOIN game_genre gg ON p.game_id = gg.game_id
+                    WHERE p.player_id = c.player_id
+                    GROUP BY gg.genre_id
+                    ORDER BY total_play_time DESC
+                    LIMIT 1
+                ) as sub_max_genre) as favorite_genre_id
                 FROM collection c
                 JOIN game_collection gc ON c.collection_id = gc.collection_id
                 JOIN game_genre gg ON gc.game_id = gg.game_id
