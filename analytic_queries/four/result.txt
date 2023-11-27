@@ -1,0 +1,10 @@
+[(51, datetime.timedelta(days=11734, seconds=10296), Decimal('1.7500000000000000')),
+(21, datetime.timedelta(days=7000, seconds=73784), Decimal('2.0000000000000000')),
+(105, datetime.timedelta(days=6891, seconds=64986), Decimal('2.8333333333333333')),
+(115, datetime.timedelta(days=6214, seconds=37552), Decimal('2.6250000000000000')),
+(19, datetime.timedelta(days=5522, seconds=7293), Decimal('2.0000000000000000')),
+(72, datetime.timedelta(days=4976, seconds=29196), Decimal('1.3333333333333333')),
+(65, datetime.timedelta(days=4660, seconds=2608), Decimal('2.7500000000000000')),
+(4, datetime.timedelta(days=4365, seconds=10056), Decimal('2.8333333333333333')),
+(113, datetime.timedelta(days=4150, seconds=57790), Decimal('2.4000000000000000')),
+(92, datetime.timedelta(days=3889, seconds=25496), Decimal('3.8750000000000000')), ...]
