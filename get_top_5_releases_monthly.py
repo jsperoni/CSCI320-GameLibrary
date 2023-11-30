@@ -10,7 +10,7 @@ def get_top_5_releases_monthly():
              ORDER BY total_time DESC, average_rating DESC
              LIMIT 5
              """)
-    print(execute_query(query))
+    return execute_query(query)
 
 if __name__ == '__main__':
     get_top_5_releases_monthly()

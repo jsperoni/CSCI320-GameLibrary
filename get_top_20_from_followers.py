@@ -10,7 +10,7 @@ def get_top_20_from_followers(player_id):
             ORDER BY total_time DESC, average_rating DESC
             LIMIT 20
              """)
-    print(execute_query(query))
+    return execute_query(query)
 
 if __name__ == '__main__':
     get_top_20_from_followers(1608)

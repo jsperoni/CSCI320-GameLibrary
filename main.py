@@ -28,6 +28,10 @@ from update_collection_name import update_collection_name
 from create_play_session import create_play_session
 from create_update_rating import rate
 from search_player_platform import does_player_have_platform, does_player_have_platform_by_name
+from get_top_20_in_90_days import get_top_20_in_90_days
+from get_top_20_from_followers import get_top_20_from_followers
+from get_top_5_releases_monthly import get_top_5_releases_monthly
+from for_you import for_you
 
 # global variable so we dont have to pass it around always
 player_id = ""
@@ -228,7 +232,7 @@ def metrics_processing():
         print("4. Top 20 most popular video games in last 90 days")
         print("5. Top 20 most popular video games among your followers")
         print("6. Top 5 new releases of the month")
-        print("7. For your recommendations")
+        print("7. For you recommendations")
         option = input("")
         print("")
 
@@ -249,13 +253,40 @@ def metrics_processing():
             for index, game in enumerate(games):
                 print(f"{index}: title={game[0]}, rating={game[1]}, playTime(H:M:S)={convert_seconds_to_hours_minutes(game[2])}")
         elif option.upper() == '4':
-            print()
+            print("Top 20 most popular video games in last 90 days")
+            games = get_top_20_in_90_days()
+            for index, game in enumerate(games):
+                #print(game[0])
+                #print(search_game_id(game[0]))
+                game_title = search_game_id(game[0])[0][1][0]
+                print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '5':
-            print()
+            print("Top 20 most popular video games among your followers")
+            games = get_top_20_from_followers(player_id)
+            if games == []:
+                print("There is not enough data!")
+            else:
+                for index, game in enumerate(games):
+                    #print(game[0])
+                    #print(search_game_id(game[0]))
+                    game_title = search_game_id(game[0])[0][1][0]
+                    print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '6':
-            print()
+            print("Top 5 new releases of the month")
+            games = get_top_5_releases_monthly()
+            for index, game in enumerate(games):
+                #print(game[0])
+                #print(search_game_id(game[0]))
+                game_title = search_game_id(game[0])[0][1][0]
+                print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '7':
-            print()
+            print("For You")
+            games = for_you(player_id)
+            for index, game in enumerate(games):
+                #print(game[0])
+                #print(search_game_id(game[0]))
+                game_title = search_game_id(game[0])[0][1][0]
+                print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         else:
             print("Unknown command... Try again")
         
