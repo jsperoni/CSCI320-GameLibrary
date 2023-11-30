@@ -17,6 +17,7 @@ from search_collections import search_collection
 from search_game_collections import search_game_collections
 from search_games import (
     search_game_id,
+    search_game_name_id,
     search_game_name,
     search_game_price,
     search_game_platform,
@@ -256,9 +257,7 @@ def metrics_processing():
             print("Top 20 most popular video games in last 90 days")
             games = get_top_20_in_90_days()
             for index, game in enumerate(games):
-                #print(game[0])
-                #print(search_game_id(game[0]))
-                game_title = search_game_id(game[0])[0][1][0]
+                game_title = search_game_name_id(game[0])
                 print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '5':
             print("Top 20 most popular video games among your followers")
@@ -267,25 +266,20 @@ def metrics_processing():
                 print("There is not enough data!")
             else:
                 for index, game in enumerate(games):
-                    #print(game[0])
-                    #print(search_game_id(game[0]))
-                    game_title = search_game_id(game[0])[0][1][0]
+
+                    game_title = search_game_name_id(game[0])
                     print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '6':
             print("Top 5 new releases of the month")
             games = get_top_5_releases_monthly()
             for index, game in enumerate(games):
-                #print(game[0])
-                #print(search_game_id(game[0]))
-                game_title = search_game_id(game[0])[0][1][0]
+                game_title = search_game_name_id(game[0])
                 print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         elif option.upper() == '7':
             print("For You")
             games = for_you(player_id)
             for index, game in enumerate(games):
-                #print(game[0])
-                #print(search_game_id(game[0]))
-                game_title = search_game_id(game[0])[0][1][0]
+                game_title = search_game_name_id(game[0])
                 print(f"{index}: title={game_title}, rating={game[2]}, total playTime(H:M:S)={convert_seconds_to_hours_minutes(game[1])}")
         else:
             print("Unknown command... Try again")
