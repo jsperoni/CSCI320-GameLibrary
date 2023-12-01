@@ -234,6 +234,7 @@ def metrics_processing():
         print("5. Top 20 most popular video games among your followers")
         print("6. Top 5 new releases of the month")
         print("7. For you recommendations")
+        print("(B)ack")
         option = input("")
         print("")
 
@@ -275,6 +276,8 @@ def metrics_processing():
             games = for_you(player_id)
             for index, game in enumerate(games):
                 print(f"{index+1}. Title: {game[0]}")
+        elif option.upper() == "B":
+            return
         else:
             print("Unknown command... Try again")
         
