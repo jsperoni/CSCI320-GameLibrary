@@ -14,7 +14,7 @@ FROM game
 ORDER BY score DESC
 LIMIT 20
              """)
-    print(execute_query(query))
+    return execute_query(query)
 
 if __name__ == '__main__':
     get_top_20_in_90_days()

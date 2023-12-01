@@ -27,7 +27,7 @@ FROM game
 ORDER BY time, avg_rating
 LIMIT 20
              """)
-    print(execute_query(query))
+    return execute_query(query) 
 
 if __name__ == '__main__':
     get_top_20_from_followers(1608)
