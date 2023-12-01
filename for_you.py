@@ -3,12 +3,21 @@ from db_config import execute_query
 # unfinished
 def for_you(player_id):
     query = f"""
-    SELECT genre_id, 
-    FROM genre g 
-        JOIN developer d ON g.game_id = d.game_id
-        JOIN publisher p on g.game_id = p.game_id
-        JOIN plays
-    WHERE f.follower_id = %s
+SELECT DISTINCT player_id
+FROM (SELECT player_id,
+             SUM((EXTRACT(EPOCH FROM (end_time - start_time))))   AS total_time,
+             genre_id,
+             ROW_NUMBER() OVER (PARTITION BY player_id, genre_id) AS row_num
+      FROM plays p
+               NATURAL JOIN game_genre g
+               NATURAL JOIN contributor
+      WHERE EXTRACT(EPOCH FROM (end_time - start_time)) > 0
+      GROUP BY player_id, genre_id
+      ORDER BY player_id, total_time DESC) AS sub1
+WHERE row_num <= 3
+AND genre_id in (
+    SELECT
+
     """
     return execute_query(query, params=(player_id,))
 
